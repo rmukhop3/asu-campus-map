@@ -10,7 +10,7 @@ import socketserver
 import os
 from pathlib import Path
 
-PORT = 8000
+PORT = 8080
 
 def load_env():
     """Load environment variables from .env file."""
@@ -33,26 +33,25 @@ def load_env():
     return env_vars
 
 
+# Load env vars once at module level
+ENV_VARS = load_env()
+
 class EnvInjectingHandler(http.server.SimpleHTTPRequestHandler):
     """HTTP handler that injects environment variables into HTML files."""
-    
-    def __init__(self, *args, **kwargs):
-        self.env_vars = load_env()
-        super().__init__(*args, **kwargs)
     
     def do_GET(self):
         # Serve campus-map.html for root path
         if self.path == '/':
             self.path = '/campus-map.html'
         
-        # Check if requesting an HTML file
-        if self.path.endswith('.html'):
-            self.serve_html_with_env()
+        # Check if requesting an HTML or JS file that needs env injection
+        if self.path.endswith('.html') or self.path.endswith('.js'):
+            self.serve_file_with_env()
         else:
             super().do_GET()
     
-    def serve_html_with_env(self):
-        """Serve HTML file with environment variables injected."""
+    def serve_file_with_env(self):
+        """Serve HTML/JS file with environment variables injected."""
         try:
             file_path = Path(__file__).parent / self.path.lstrip('/')
             
@@ -64,18 +63,24 @@ class EnvInjectingHandler(http.server.SimpleHTTPRequestHandler):
                 content = f.read()
             
             # Inject environment variables
-            api_key = self.env_vars.get('GOOGLE_MAPS_API_KEY', 'YOUR_API_KEY')
+            api_key = ENV_VARS.get('GOOGLE_MAPS_API_KEY', 'YOUR_API_KEY')
             
-            # Replace the placeholder in the HTML
+            # Replace the placeholder in the file
             content = content.replace(
                 "__ENV_GOOGLE_MAPS_API_KEY__",
                 api_key
             )
             
+            # Determine content type
+            content_type = 'text/html' if self.path.endswith('.html') else 'application/javascript'
+            
             # Send response
             self.send_response(200)
-            self.send_header('Content-type', 'text/html; charset=utf-8')
+            self.send_header('Content-type', f'{content_type}; charset=utf-8')
             self.send_header('Content-Length', len(content.encode('utf-8')))
+            self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Expires', '0')
             self.end_headers()
             self.wfile.write(content.encode('utf-8'))
             
