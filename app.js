@@ -1,72 +1,72 @@
 // ========== CONFIGURATION ==========
 // API key is injected by the server from .env file - DO NOT HARDCODE
 const GOOGLE_MAPS_API_KEY = '__ENV_GOOGLE_MAPS_API_KEY__';
-const ASU_CENTER = { lat: 33.4242, lng: -111.9281 };
+const ASU_CENTER = { lat: 33.4185, lng: -111.9340 };
 
 // ========== ASU TEMPE CAMPUS DATA ==========
 const campusLocations = {
-    // Libraries
-    hayden: { name: 'Hayden Library', code: 'HAYDN', position: { lat: 33.4189, lng: -111.9343 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 67, hours: '7AM - 2AM', address: '300 E Orange Mall' },
-    noble: { name: 'Noble Library', code: 'NOBLE', position: { lat: 33.4172, lng: -111.9355 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 34, hours: '7AM - 10PM', address: '1541 S McAllister Ave' },
-    law: { name: 'Ross-Blakley Law Library', code: 'LAW', position: { lat: 33.4215, lng: -111.9315 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 45, hours: '8AM - 10PM', address: '1100 S McAllister Ave' },
-    design: { name: 'Design Library', code: 'DLIB', position: { lat: 33.4205, lng: -111.9380 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 28, hours: '9AM - 6PM', address: 'Architecture Building' },
+    // Libraries - Verified coordinates
+    hayden: { name: 'Hayden Library', code: 'HAYDN', position: { lat: 33.4191, lng: -111.9348 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 67, hours: '7AM - 2AM', address: '300 E Orange Mall' },
+    noble: { name: 'Noble Library', code: 'NOBLE', position: { lat: 33.4174, lng: -111.9357 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 34, hours: '7AM - 10PM', address: '1541 S McAllister Ave' },
+    law: { name: 'Ross-Blakley Law Library', code: 'LAW', position: { lat: 33.4171, lng: -111.9313 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 45, hours: '8AM - 10PM', address: '1100 S McAllister Ave' },
+    design: { name: 'Design Library', code: 'DLIB', position: { lat: 33.4216, lng: -111.9392 }, type: 'library', icon: '📚', color: '#3b82f6', status: 'open', capacity: 28, hours: '9AM - 6PM', address: 'Architecture Building' },
 
-    // Major Academic Buildings
-    coor: { name: 'Lattie F. Coor Hall', code: 'COOR', position: { lat: 33.4198, lng: -111.9336 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '976 S Forest Mall' },
-    mu: { name: 'Memorial Union', code: 'MU', position: { lat: 33.4177, lng: -111.9341 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 11PM', address: '301 E Orange St' },
-    byeng: { name: 'Brickyard Engineering', code: 'BYENG', position: { lat: 33.4231, lng: -111.9396 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '699 S Mill Ave' },
-    ba: { name: 'Business Administration', code: 'BA', position: { lat: 33.4163, lng: -111.9318 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '400 E Lemon St' },
-    fulton: { name: 'Fulton Center', code: 'FULTN', position: { lat: 33.4218, lng: -111.9362 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '300 E University Dr' },
-    istb1: { name: 'Interdisciplinary Science & Tech I', code: 'ISTB1', position: { lat: 33.4205, lng: -111.9295 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '550 E Orange St' },
-    istb4: { name: 'Interdisciplinary Science & Tech IV', code: 'ISTB4', position: { lat: 33.4195, lng: -111.9285 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '781 E Terrace Mall' },
-    psych: { name: 'Psychology Building', code: 'PSYCH', position: { lat: 33.4185, lng: -111.9310 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '950 S McAllister Ave' },
-    psa: { name: 'Physical Sciences A', code: 'PSA', position: { lat: 33.4210, lng: -111.9320 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '550 E University Dr' },
+    // Major Academic Buildings - Verified coordinates
+    coor: { name: 'Lattie F. Coor Hall', code: 'COOR', position: { lat: 33.4192, lng: -111.9325 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '976 S Forest Mall' },
+    mu: { name: 'Memorial Union', code: 'MU', position: { lat: 33.4179, lng: -111.9345 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 11PM', address: '301 E Orange St' },
+    byeng: { name: 'Brickyard Engineering', code: 'BYENG', position: { lat: 33.4226, lng: -111.9406 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '699 S Mill Ave' },
+    ba: { name: 'Business Administration', code: 'BA', position: { lat: 33.4159, lng: -111.9320 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '400 E Lemon St' },
+    fulton: { name: 'Fulton Center', code: 'FULTN', position: { lat: 33.4217, lng: -111.9365 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '300 E University Dr' },
+    istb1: { name: 'Interdisciplinary Science & Tech I', code: 'ISTB1', position: { lat: 33.4204, lng: -111.9290 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '550 E Orange St' },
+    istb4: { name: 'Interdisciplinary Science & Tech IV', code: 'ISTB4', position: { lat: 33.4188, lng: -111.9280 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '781 E Terrace Mall' },
+    psych: { name: 'Psychology Building', code: 'PSYCH', position: { lat: 33.4200, lng: -111.9315 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '950 S McAllister Ave' },
+    psa: { name: 'Physical Sciences A', code: 'PSA', position: { lat: 33.4210, lng: -111.9315 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '550 E University Dr' },
     psf: { name: 'Physical Sciences F', code: 'PSF', position: { lat: 33.4215, lng: -111.9310 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: 'University Dr' },
-    psh: { name: 'Physical Sciences H', code: 'PSH', position: { lat: 33.4220, lng: -111.9315 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: 'University Dr' },
-    oldmain: { name: 'Old Main', code: 'MAIN', position: { lat: 33.4201, lng: -111.9333 }, type: 'building', icon: '🏛️', color: '#FFC627', status: 'open', hours: '8AM - 5PM', address: '400 E Tyler Mall' },
-    ecg: { name: 'Engineering Center G', code: 'ECG', position: { lat: 33.4225, lng: -111.9390 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '501 E Tyler Mall' },
-    eca: { name: 'Engineering Center A', code: 'ECA', position: { lat: 33.4222, lng: -111.9385 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '501 E Tyler Mall' },
-    bda: { name: 'Biodesign A', code: 'BDA', position: { lat: 33.4195, lng: -111.9270 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '727 E Tyler St' },
-    bdb: { name: 'Biodesign B', code: 'BDB', position: { lat: 33.4190, lng: -111.9265 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '727 E Tyler St' },
-    stauf: { name: 'Stauffer Hall', code: 'STAUF', position: { lat: 33.4200, lng: -111.9350 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '950 S Forest Mall' },
-    whall: { name: 'Wilson Hall', code: 'WILSN', position: { lat: 33.4195, lng: -111.9365 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '455 E University Dr' },
-    life: { name: 'Life Sciences A', code: 'LSA', position: { lat: 33.4230, lng: -111.9340 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '427 E Tyler Mall' },
+    psh: { name: 'Physical Sciences H', code: 'PSH', position: { lat: 33.4218, lng: -111.9315 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: 'University Dr' },
+    oldmain: { name: 'Old Main', code: 'MAIN', position: { lat: 33.4203, lng: -111.9340 }, type: 'building', icon: '🏛️', color: '#FFC627', status: 'open', hours: '8AM - 5PM', address: '400 E Tyler Mall' },
+    ecg: { name: 'Engineering Center G', code: 'ECG', position: { lat: 33.4216, lng: -111.9396 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '501 E Tyler Mall' },
+    eca: { name: 'Engineering Center A', code: 'ECA', position: { lat: 33.4213, lng: -111.9389 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '501 E Tyler Mall' },
+    bda: { name: 'Biodesign A', code: 'BDA', position: { lat: 33.4191, lng: -111.9267 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '727 E Tyler St' },
+    bdb: { name: 'Biodesign B', code: 'BDB', position: { lat: 33.4186, lng: -111.9262 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 9PM', address: '727 E Tyler St' },
+    stauf: { name: 'Stauffer Hall', code: 'STAUF', position: { lat: 33.4199, lng: -111.9350 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '950 S Forest Mall' },
+    whall: { name: 'Wilson Hall', code: 'WILSN', position: { lat: 33.4203, lng: -111.9362 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '455 E University Dr' },
+    life: { name: 'Life Sciences A', code: 'LSA', position: { lat: 33.4219, lng: -111.9339 }, type: 'building', icon: '🏛️', color: '#6b7280', status: 'open', hours: '7AM - 10PM', address: '427 E Tyler Mall' },
 
-    // Food & Dining
-    pitchforks: { name: 'Pitchforks Dining', code: 'PITCH', position: { lat: 33.4180, lng: -111.9350 }, type: 'food', icon: '🍕', color: '#06b6d4', status: 'open', hours: '7AM - 9PM', waitTime: 5 },
-    hassayampa: { name: 'Hassayampa Dining', code: 'HASSA', position: { lat: 33.4155, lng: -111.9380 }, type: 'food', icon: '🍔', color: '#06b6d4', status: 'open', hours: '7AM - 10PM', waitTime: 8 },
-    tooker: { name: 'Tooker House Dining', code: 'TOOKR', position: { lat: 33.4165, lng: -111.9250 }, type: 'food', icon: '🥗', color: '#06b6d4', status: 'open', hours: '7AM - 9PM', waitTime: 3 },
-    starbucksMU: { name: 'Starbucks (MU)', code: 'SBMU', position: { lat: 33.4175, lng: -111.9338 }, type: 'food', icon: '☕', color: '#06b6d4', status: 'open', hours: '7AM - 8PM', waitTime: 10 },
-    chikfila: { name: 'Chick-fil-A', code: 'CFA', position: { lat: 33.4178, lng: -111.9345 }, type: 'food', icon: '🐔', color: '#06b6d4', status: 'open', hours: '7:30AM - 8PM', waitTime: 15 },
+    // Food & Dining - Verified coordinates
+    pitchforks: { name: 'Pitchforks Dining', code: 'PITCH', position: { lat: 33.4180, lng: -111.9346 }, type: 'food', icon: '🍕', color: '#06b6d4', status: 'open', hours: '7AM - 9PM', waitTime: 5 },
+    hassayampa: { name: 'Hassayampa Dining', code: 'HASSA', position: { lat: 33.4149, lng: -111.9380 }, type: 'food', icon: '🍔', color: '#06b6d4', status: 'open', hours: '7AM - 10PM', waitTime: 8 },
+    tooker: { name: 'Tooker House Dining', code: 'TOOKR', position: { lat: 33.4155, lng: -111.9250 }, type: 'food', icon: '🥗', color: '#06b6d4', status: 'open', hours: '7AM - 9PM', waitTime: 3 },
+    starbucksMU: { name: 'Starbucks (MU)', code: 'SBMU', position: { lat: 33.4178, lng: -111.9344 }, type: 'food', icon: '☕', color: '#06b6d4', status: 'open', hours: '7AM - 8PM', waitTime: 10 },
+    chikfila: { name: 'Chick-fil-A', code: 'CFA', position: { lat: 33.4179, lng: -111.9347 }, type: 'food', icon: '🐔', color: '#06b6d4', status: 'open', hours: '7:30AM - 8PM', waitTime: 15 },
 
-    // Study Rooms
+    // Study Rooms - Positioned within their parent buildings
     room204: { name: 'Study Room 204', code: 'NOBLE-204', position: { lat: 33.4174, lng: -111.9358 }, type: 'room', icon: '🚪', color: '#22c55e', status: 'available', capacity: 4, available: true, amenities: ['Whiteboard', 'TV', 'Power'] },
-    room301: { name: 'Study Room 301', code: 'HAYDN-301', position: { lat: 33.4191, lng: -111.9345 }, type: 'room', icon: '🚪', color: '#22c55e', status: 'busy', capacity: 6, available: false, amenities: ['Whiteboard', 'Projector'] },
-    roomA: { name: 'Conference Room A', code: 'COOR-A', position: { lat: 33.4196, lng: -111.9333 }, type: 'room', icon: '🚪', color: '#22c55e', status: 'available', capacity: 10, available: true, amenities: ['Video Conf', 'Whiteboard'] },
-    roomB: { name: 'Conference Room B', code: 'FULTN-B', position: { lat: 33.4220, lng: -111.9365 }, type: 'room', icon: '🚪', color: '#22c55e', status: 'available', capacity: 8, available: true, amenities: ['Projector', 'Phone'] },
+    room301: { name: 'Study Room 301', code: 'HAYDN-301', position: { lat: 33.4191, lng: -111.9349 }, type: 'room', icon: '🚪', color: '#22c55e', status: 'busy', capacity: 6, available: false, amenities: ['Whiteboard', 'Projector'] },
+    roomA: { name: 'Conference Room A', code: 'COOR-A', position: { lat: 33.4192, lng: -111.9325 }, type: 'room', icon: '🚪', color: '#22c55e', status: 'available', capacity: 10, available: true, amenities: ['Video Conf', 'Whiteboard'] },
+    roomB: { name: 'Conference Room B', code: 'FULTN-B', position: { lat: 33.4218, lng: -111.9367 }, type: 'room', icon: '🚪', color: '#22c55e', status: 'available', capacity: 8, available: true, amenities: ['Projector', 'Phone'] },
 
-    // Restrooms
-    restroomMU: { name: 'MU 1st Floor', code: 'MU-RR1', position: { lat: 33.4175, lng: -111.9338 }, type: 'restroom', icon: '🚻', color: '#f59e0b', status: 'low', accessible: true },
-    restroomCoor: { name: 'Coor Hall 2nd Floor', code: 'COOR-RR2', position: { lat: 33.4196, lng: -111.9334 }, type: 'restroom', icon: '🚻', color: '#f59e0b', status: 'low', accessible: true },
-    restroomHayden: { name: 'Hayden 1st Floor', code: 'HAYDN-RR', position: { lat: 33.4187, lng: -111.9340 }, type: 'restroom', icon: '🚻', color: '#f59e0b', status: 'moderate', accessible: true },
+    // Restrooms - Positioned within their parent buildings
+    restroomMU: { name: 'MU 1st Floor', code: 'MU-RR1', position: { lat: 33.4179, lng: -111.9345 }, type: 'restroom', icon: '🚻', color: '#f59e0b', status: 'low', accessible: true },
+    restroomCoor: { name: 'Coor Hall 2nd Floor', code: 'COOR-RR2', position: { lat: 33.4192, lng: -111.9325 }, type: 'restroom', icon: '🚻', color: '#f59e0b', status: 'low', accessible: true },
+    restroomHayden: { name: 'Hayden 1st Floor', code: 'HAYDN-RR', position: { lat: 33.4190, lng: -111.9348 }, type: 'restroom', icon: '🚻', color: '#f59e0b', status: 'moderate', accessible: true },
 
-    // Recreation
-    sdfc: { name: 'Sun Devil Fitness Complex', code: 'SDFC', position: { lat: 33.4261, lng: -111.9279 }, type: 'fitness', icon: '🏋️', color: '#ec4899', status: 'open', capacity: 45, hours: '6AM - 11PM' },
+    // Recreation - Verified coordinates
+    sdfc: { name: 'Sun Devil Fitness Complex', code: 'SDFC', position: { lat: 33.4266, lng: -111.9279 }, type: 'fitness', icon: '🏋️', color: '#ec4899', status: 'open', capacity: 45, hours: '6AM - 11PM' },
 
-    // Parking
-    parkingApache: { name: 'Apache Parking Structure', code: 'APACHE', position: { lat: 33.4145, lng: -111.9320 }, type: 'parking', icon: '🅿️', color: '#6b7280', status: 'available', spotsAvailable: 234 },
-    parkingTyler: { name: 'Tyler Street Garage', code: 'TYLER', position: { lat: 33.4250, lng: -111.9370 }, type: 'parking', icon: '🅿️', color: '#6b7280', status: 'busy', spotsAvailable: 45 },
-    parkingRural: { name: 'Rural Road Structure', code: 'RURAL', position: { lat: 33.4200, lng: -111.9250 }, type: 'parking', icon: '🅿️', color: '#6b7280', status: 'available', spotsAvailable: 312 },
+    // Parking - Verified coordinates
+    parkingApache: { name: 'Apache Parking Structure', code: 'APACHE', position: { lat: 33.4135, lng: -111.9328 }, type: 'parking', icon: '🅿️', color: '#6b7280', status: 'available', spotsAvailable: 234 },
+    parkingTyler: { name: 'Tyler Street Garage', code: 'TYLER', position: { lat: 33.4247, lng: -111.9375 }, type: 'parking', icon: '🅿️', color: '#6b7280', status: 'busy', spotsAvailable: 45 },
+    parkingRural: { name: 'Rural Road Structure', code: 'RURAL', position: { lat: 33.4197, lng: -111.9248 }, type: 'parking', icon: '🅿️', color: '#6b7280', status: 'available', spotsAvailable: 312 },
 
-    // Events (dynamic)
-    event1: { name: 'AI & ML Workshop', code: 'EVENT', position: { lat: 33.4229, lng: -111.9394 }, type: 'event', icon: '🎉', color: '#8C1D40', status: 'live', location: 'BYENG 210', time: '2PM - 4PM', attendees: 47 },
-    event2: { name: 'Career Fair', code: 'EVENT', position: { lat: 33.4175, lng: -111.9340 }, type: 'event', icon: '💼', color: '#8C1D40', status: 'live', location: 'MU Ballroom', time: '10AM - 3PM', attendees: 215 },
-    event3: { name: 'Gaming Tournament', code: 'EVENT', position: { lat: 33.4260, lng: -111.9278 }, type: 'event', icon: '🎮', color: '#8C1D40', status: 'soon', location: 'SDFC', time: '5PM - 9PM', attendees: 64 },
+    // Events (dynamic) - Positioned at their event buildings
+    event1: { name: 'AI & ML Workshop', code: 'EVENT', position: { lat: 33.4226, lng: -111.9406 }, type: 'event', icon: '🎉', color: '#8C1D40', status: 'live', location: 'BYENG 210', time: '2PM - 4PM', attendees: 47 },
+    event2: { name: 'Career Fair', code: 'EVENT', position: { lat: 33.4180, lng: -111.9346 }, type: 'event', icon: '💼', color: '#8C1D40', status: 'live', location: 'MU Ballroom', time: '10AM - 3PM', attendees: 215 },
+    event3: { name: 'Gaming Tournament', code: 'EVENT', position: { lat: 33.4266, lng: -111.9279 }, type: 'event', icon: '🎮', color: '#8C1D40', status: 'soon', location: 'SDFC', time: '5PM - 9PM', attendees: 64 },
 
-    // Meetups (student-created)
-    meetup1: { name: 'Coffee & Code', code: 'MEETUP', position: { lat: 33.4176, lng: -111.9339 }, type: 'meetup', icon: '☕', color: '#a855f7', status: 'soon', location: 'MU Starbucks', time: '3:30PM', attendees: 8, topics: ['JavaScript', 'React', 'Web Dev'] },
-    meetup2: { name: 'Physics Study Group', code: 'MEETUP', position: { lat: 33.4173, lng: -111.9356 }, type: 'meetup', icon: '📖', color: '#a855f7', status: 'live', location: 'Noble 3rd Floor', time: '2PM - 5PM', attendees: 5, topics: ['PHY 121', 'Midterm'] },
-    meetup3: { name: 'Startup Networking', code: 'MEETUP', position: { lat: 33.4196, lng: -111.9335 }, type: 'meetup', icon: '🚀', color: '#a855f7', status: 'soon', location: 'Coor Hall', time: '6PM', attendees: 23, topics: ['Entrepreneurship', 'Tech'] }
+    // Meetups (student-created) - Positioned at their meeting locations
+    meetup1: { name: 'Coffee & Code', code: 'MEETUP', position: { lat: 33.4178, lng: -111.9344 }, type: 'meetup', icon: '☕', color: '#a855f7', status: 'soon', location: 'MU Starbucks', time: '3:30PM', attendees: 8, topics: ['JavaScript', 'React', 'Web Dev'] },
+    meetup2: { name: 'Physics Study Group', code: 'MEETUP', position: { lat: 33.4174, lng: -111.9357 }, type: 'meetup', icon: '📖', color: '#a855f7', status: 'live', location: 'Noble 3rd Floor', time: '2PM - 5PM', attendees: 5, topics: ['PHY 121', 'Midterm'] },
+    meetup3: { name: 'Startup Networking', code: 'MEETUP', position: { lat: 33.4192, lng: -111.9325 }, type: 'meetup', icon: '🚀', color: '#a855f7', status: 'soon', location: 'Coor Hall', time: '6PM', attendees: 23, topics: ['Entrepreneurship', 'Tech'] }
 };
 
 // ========== GLOBAL VARIABLES ==========
