@@ -96,7 +96,8 @@ def main():
     
     print(f"\n🗺️  ASU Campus Map Development Server")
     print(f"{'=' * 40}")
-    print(f"📍 Server running at: http://localhost:{PORT}")
+    print(f"📍 Campus Map:  http://localhost:{PORT}")
+    print(f"📍 Admin Tool:  http://localhost:{PORT}/location-admin.html")
     print(f"🔑 API Key loaded: {'✅ Yes' if api_key != 'NOT SET' and api_key != 'YOUR_API_KEY_HERE' else '❌ No (check .env file)'}")
     print(f"{'=' * 40}")
     print(f"Press Ctrl+C to stop the server\n")

@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Marauder's Map - Location Cartographer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English:ital@0;1&family=IM+Fell+DW+Pica:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --parchment: #f4e4c1;
+            --parchment-light: #faf0dc;
+            --parchment-dark: #e8d5a3;
+            --parchment-shadow: #d4c08f;
+            --ink: #2c1810;
+            --ink-light: #4a3728;
+            --ink-faded: #7a6b5a;
+            --ink-ghost: #b8a990;
+            --gold: #c4a35a;
+            --gold-bright: #d4b36a;
+            --gold-dark: #8b7340;
+            --maroon: #6b1631;
+            --maroon-light: #8C1D40;
+            --red-ink: #8b1a1a;
+            --green-ink: #2d5a27;
+            --blue-ink: #1a3a5c;
+            --border-ink: #3a2a1a;
+            --success: #2d5a27;
+            --warning: #8b7340;
+            --danger: #8b1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'IM Fell English', 'Georgia', serif;
+            background: var(--parchment);
+            color: var(--ink);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: linear-gradient(to bottom, var(--parchment-dark), var(--parchment));
+            border-bottom: 2px solid var(--border-ink);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 2px solid var(--ink);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            color: var(--maroon);
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 20px;
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        .logo-text span { color: var(--maroon); }
+
+        .header-badge {
+            padding: 6px 14px;
+            background: rgba(107, 22, 49, 0.1);
+            border: 1px solid var(--maroon);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--maroon);
+            font-family: 'Cinzel', serif;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--ink-ghost);
+            border-radius: 8px;
+            color: var(--ink);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'IM Fell English', serif;
+        }
+
+        .header-btn:hover {
+            background: transparent;
+            border-color: var(--maroon);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            margin-top: 64px;
+            height: calc(100vh - 64px);
+        }
+
+        /* Left Panel */
+        .panel {
+            width: 440px;
+            background: var(--parchment-light);
+            border-right: 2px solid var(--border-ink);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--parchment-shadow);
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-family: 'Cinzel', serif;
+            color: var(--ink);
+        }
+
+        .panel-subtitle {
+            font-size: 12px;
+            color: var(--ink-faded);
+            font-style: italic;
+        }
+
+        /* Form */
+        .form-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--dark-border);
+            overflow-y: auto;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--ink-faded);
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-family: 'Cinzel', serif;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--parchment);
+            border: 1px solid var(--ink-ghost);
+            border-radius: 8px;
+            color: var(--ink);
+            font-size: 14px;
+            font-family: 'IM Fell English', serif;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--maroon);
+            box-shadow: 0 0 0 3px rgba(107, 22, 49, 0.1);
+        }
+
+        .form-textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .coord-display {
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            padding: 12px;
+            background: var(--parchment-dark);
+            border: 1px solid var(--parchment-shadow);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--ink);
+        }
+
+        .coord-display .value {
+            color: var(--maroon);
+        }
+
+        /* Buttons */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            padding: 16px 20px;
+            border-top: 1px solid var(--parchment-shadow);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: var(--maroon);
+            color: var(--parchment);
+        }
+
+        .btn-primary:hover {
+            background: var(--maroon-light);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--parchment-dark);
+            color: var(--ink);
+            border: 1px solid var(--ink-ghost);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--maroon);
+        }
+
+        .btn-danger {
+            background: rgba(139, 26, 26, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(139, 26, 26, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(139, 26, 26, 0.2);
+        }
+
+        /* Location List */
+        .list-section {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .list-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .list-section::-webkit-scrollbar-thumb {
+            background: var(--ink-ghost);
+            border-radius: 3px;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+
+        .list-count {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .list-item {
+            padding: 12px;
+            background: var(--parchment);
+            border: 1px solid var(--parchment-shadow);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .list-item:hover {
+            border-color: var(--ink);
+        }
+
+        .list-item.active {
+            border-color: var(--maroon);
+            background: rgba(107, 22, 49, 0.05);
+        }
+
+        .list-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .list-item-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .list-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: 'Cinzel', serif;
+        }
+
+        .list-item-detail {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .list-item-type {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(107, 22, 49, 0.1);
+            color: var(--maroon);
+            font-weight: 600;
+            text-transform: uppercase;
+            flex-shrink: 0;
+            font-family: 'Cinzel', serif;
+        }
+
+        .list-item-actions {
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .list-item-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--ink-ghost);
+            background: var(--parchment-light);
+            color: var(--ink-faded);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .list-item-btn:hover {
+            border-color: var(--maroon);
+            color: var(--maroon);
+        }
+
+        .list-item-btn.delete:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        /* Map */
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+
+        #adminMap {
+            width: 100%;
+            height: 100%;
+        }
+
+        .map-instructions {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(244, 228, 193, 0.95);
+            border: 1px solid var(--ink-ghost);
+            border-radius: 10px;
+            padding: 12px 20px;
+            font-size: 13px;
+            color: var(--ink-faded);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .map-instructions .highlight {
+            color: var(--maroon);
+            font-weight: 600;
+        }
+
+        .map-crosshair {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .map-crosshair::before,
+        .map-crosshair::after {
+            content: '';
+            position: absolute;
+            background: var(--maroon);
+        }
+
+        .map-crosshair::before {
+            width: 2px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .map-crosshair::after {
+            height: 2px;
+            width: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Export Panel */
+        .export-panel {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(244, 228, 193, 0.95);
+            border: 1px solid var(--ink-ghost);
+            border-radius: 12px;
+            padding: 16px;
+            z-index: 10;
+            min-width: 280px;
+        }
+
+        .export-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Cinzel', serif;
+            color: var(--ink);
+        }
+
+        .export-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .export-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            border: 1px solid var(--ink-ghost);
+            background: var(--parchment);
+            color: var(--ink);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            font-family: 'IM Fell English', serif;
+        }
+
+        .export-btn:hover {
+            border-color: var(--maroon);
+        }
+
+        .export-btn .desc {
+            display: block;
+            font-size: 11px;
+            color: var(--ink-faded);
+            margin-top: 2px;
+            font-style: italic;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: var(--parchment);
+            border: 1px solid var(--ink-ghost);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 260px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: slideIn 0.3s ease;
+            color: var(--ink);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.success { border-left: 3px solid var(--success); }
+        .toast.warning { border-left: 3px solid var(--warning); }
+        .toast.info { border-left: 3px solid var(--blue-ink); }
+
+        .toast-text {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 2px;
+        }
+
+        /* API Notice */
+        .api-notice {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--parchment);
+            border: 2px solid var(--maroon);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            z-index: 5;
+        }
+
+        .api-notice h2 {
+            color: var(--maroon);
+            margin-bottom: 16px;
+            font-size: 20px;
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        .api-notice p {
+            color: var(--ink-faded);
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .api-notice code {
+            display: block;
+            background: var(--parchment-dark);
+            padding: 10px;
+            border-radius: 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--maroon);
+            margin: 12px 0;
+            border: 1px solid var(--parchment-shadow);
+        }
+
+        /* Import/Upload Area */
+        .import-area {
+            border: 2px dashed var(--ink-ghost);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 16px;
+        }
+
+        .import-area:hover {
+            border-color: var(--maroon);
+            background: rgba(107, 22, 49, 0.03);
+        }
+
+        .import-area p {
+            font-size: 13px;
+            color: var(--ink-faded);
+            margin-top: 8px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .panel { width: 100%; }
+            .map-container { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">🗺️</div>
+            <div class="logo-text">Marauder's <span>Map</span></div>
+        </div>
+        <div class="header-badge">Cartographer</div>
+        <div class="header-actions">
+            <a href="campus-map.html" class="header-btn">View Map</a>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <div class="main-container">
+        <!-- Left Panel -->
+        <div class="panel">
+            <div class="panel-header">
+                <div class="panel-title">Location Cartographer</div>
+                <div class="panel-subtitle">Chart new territories on the map or enter coordinates by quill</div>
+            </div>
+
+            <!-- Form -->
+            <div class="form-section" id="formSection">
+                <div class="coord-display" id="coordDisplay">
+                    <span>Lat: <span class="value" id="dispLat">--</span></span>
+                    <span>Lng: <span class="value" id="dispLng">--</span></span>
+                </div>
+
+                <div style="height:16px;"></div>
+
+                <div class="form-group">
+                    <label class="form-label">Location Name *</label>
+                    <input type="text" class="form-input" id="locName" placeholder="e.g., Hayden Library" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Latitude *</label>
+                        <input type="number" step="any" class="form-input" id="locLat" placeholder="33.4191">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Longitude *</label>
+                        <input type="number" step="any" class="form-input" id="locLng" placeholder="-111.9348">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Building Code</label>
+                        <input type="text" class="form-input" id="locCode" placeholder="HAYDN">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" id="locType">
+                            <option value="building">Building</option>
+                            <option value="library">Library</option>
+                            <option value="food">Food & Dining</option>
+                            <option value="room">Study Room</option>
+                            <option value="event">Event</option>
+                            <option value="meetup">Meetup</option>
+                            <option value="restroom">Restroom</option>
+                            <option value="parking">Parking</option>
+                            <option value="fitness">Recreation</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Address</label>
+                    <input type="text" class="form-input" id="locAddress" placeholder="300 E Orange Mall">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="locStatus">
+                            <option value="open">Open</option>
+                            <option value="closed">Closed</option>
+                            <option value="busy">Busy</option>
+                            <option value="available">Available</option>
+                            <option value="live">Live</option>
+                            <option value="soon">Starting Soon</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hours</label>
+                        <input type="text" class="form-input" id="locHours" placeholder="7AM - 10PM">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="locDescription" placeholder="Brief description of this location..."></textarea>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="btn-row">
+                <button class="btn btn-primary" id="addBtn" onclick="addLocation()">Add Location</button>
+                <button class="btn btn-secondary" id="updateBtn" onclick="updateLocation()" style="display:none;">Update</button>
+                <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+            </div>
+
+            <!-- Location List -->
+            <div class="list-section" id="locationList">
+                <div class="list-header">
+                    <span class="panel-title" style="font-size:14px;">Locations</span>
+                    <span class="list-count" id="listCount">0 locations</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map -->
+        <div class="map-container">
+            <div id="adminMap"></div>
+
+            <div class="map-instructions">
+                <span class="highlight">Click</span> on the map to set coordinates, or enter them manually
+            </div>
+
+            <!-- Export Panel -->
+            <div class="export-panel">
+                <div class="export-title">Export Locations</div>
+                <div class="export-actions">
+                    <button class="export-btn" onclick="exportAsJS()">
+                        Export as JavaScript
+                        <span class="desc">Ready to paste into app.js campusLocations</span>
+                    </button>
+                    <button class="export-btn" onclick="exportAsJSON()">
+                        Export as JSON
+                        <span class="desc">Raw JSON data for API or import</span>
+                    </button>
+                    <button class="export-btn" onclick="exportAsCSV()">
+                        Export as CSV
+                        <span class="desc">Spreadsheet-compatible format</span>
+                    </button>
+                    <button class="export-btn" onclick="importFromJSON()">
+                        Import JSON
+                        <span class="desc">Load locations from a JSON file</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="fileInput" accept=".json" style="display:none;" onchange="handleFileImport(event)">
+
+    <script>
+        // ========== STATE ==========
+        const GOOGLE_MAPS_API_KEY = '__ENV_GOOGLE_MAPS_API_KEY__';
+        const ASU_CENTER = { lat: 33.4185, lng: -111.9340 };
+
+        let adminMap, adminMarkers = {};
+        let locations = {};
+        let editingId = null;
+        let clickMarker = null;
+        let idCounter = 1;
+
+        const typeConfig = {
+            library:  { icon: '📚', color: '#3b82f6', label: 'L' },
+            building: { icon: '🏛️', color: '#6b7280', label: 'B' },
+            food:     { icon: '🍕', color: '#06b6d4', label: 'F' },
+            room:     { icon: '🚪', color: '#22c55e', label: 'R' },
+            event:    { icon: '🎉', color: '#8C1D40', label: 'E' },
+            meetup:   { icon: '👥', color: '#a855f7', label: 'M' },
+            restroom: { icon: '🚻', color: '#f59e0b', label: 'W' },
+            parking:  { icon: '🅿️', color: '#6b7280', label: 'P' },
+            fitness:  { icon: '🏋️', color: '#ec4899', label: 'G' }
+        };
+
+        // ========== MAP INIT ==========
+        function initAdminMap() {
+            adminMap = new google.maps.Map(document.getElementById('adminMap'), {
+                center: ASU_CENTER,
+                zoom: 16,
+                styles: [
+                    { elementType: 'geometry', stylers: [{ color: '#f4e4c1' }] },
+                    { elementType: 'labels.text.stroke', stylers: [{ color: '#f4e4c1' }] },
+                    { elementType: 'labels.text.fill', stylers: [{ color: '#4a3728' }] },
+                    { featureType: 'poi', elementType: 'labels.text.fill', stylers: [{ color: '#6b1631' }] },
+                    { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#ddd5b0' }] },
+                    { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#e8d5a3' }] },
+                    { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#d4c08f' }] },
+                    { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#c5d5e0' }] }
+                ],
+                mapTypeControl: true,
+                streetViewControl: false,
+                fullscreenControl: true
+            });
+
+            adminMap.addListener('click', (e) => {
+                const lat = e.latLng.lat();
+                const lng = e.latLng.lng();
+                setCoordinates(lat, lng);
+                placeClickMarker(lat, lng);
+            });
+
+            loadSavedLocations();
+            toast('info', 'Cartographer ready. Click the map to chart new locations.');
+        }
+
+        function placeClickMarker(lat, lng) {
+            if (clickMarker) {
+                clickMarker.setPosition({ lat, lng });
+            } else {
+                clickMarker = new google.maps.Marker({
+                    position: { lat, lng },
+                    map: adminMap,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 12,
+                        fillColor: '#6b1631',
+                        fillOpacity: 1,
+                        strokeColor: '#2c1810',
+                        strokeWeight: 3
+                    },
+                    zIndex: 999,
+                    draggable: true
+                });
+
+                clickMarker.addListener('dragend', () => {
+                    const pos = clickMarker.getPosition();
+                    setCoordinates(pos.lat(), pos.lng());
+                });
+            }
+        }
+
+        function setCoordinates(lat, lng) {
+            document.getElementById('locLat').value = lat.toFixed(6);
+            document.getElementById('locLng').value = lng.toFixed(6);
+            document.getElementById('dispLat').textContent = lat.toFixed(6);
+            document.getElementById('dispLng').textContent = lng.toFixed(6);
+        }
+
+        function createLocationMarker(id, loc) {
+            const tc = typeConfig[loc.type] || typeConfig.building;
+            const size = 32;
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+                <circle cx="${size/2}" cy="${size/2}" r="${size/2 - 2}" fill="${tc.color}" stroke="#fff" stroke-width="2"/>
+                <text x="${size/2}" y="${size/2 + 1}" text-anchor="middle" dominant-baseline="central" fill="white" font-family="Arial,sans-serif" font-weight="bold" font-size="12">${tc.label}</text>
+            </svg>`;
+
+            const marker = new google.maps.Marker({
+                position: { lat: loc.lat, lng: loc.lng },
+                map: adminMap,
+                title: loc.name,
+                icon: {
+                    url: 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svg),
+                    scaledSize: new google.maps.Size(size, size),
+                    anchor: new google.maps.Point(size / 2, size / 2)
+                }
+            });
+
+            marker.addListener('click', () => {
+                editLocation(id);
+                adminMap.panTo(marker.getPosition());
+            });
+
+            return marker;
+        }
+
+        // ========== CRUD ==========
+        function addLocation() {
+            const name = document.getElementById('locName').value.trim();
+            const lat = parseFloat(document.getElementById('locLat').value);
+            const lng = parseFloat(document.getElementById('locLng').value);
+
+            if (!name) { toast('warning', 'Please enter a location name'); return; }
+            if (isNaN(lat) || isNaN(lng)) { toast('warning', 'Please set valid coordinates'); return; }
+
+            const id = 'loc_' + idCounter++;
+            const loc = getFormData(name, lat, lng);
+            locations[id] = loc;
+
+            adminMarkers[id] = createLocationMarker(id, loc);
+            saveLocations();
+            renderList();
+            clearForm();
+            toast('success', `"${name}" added successfully`);
+        }
+
+        function updateLocation() {
+            if (!editingId || !locations[editingId]) return;
+
+            const name = document.getElementById('locName').value.trim();
+            const lat = parseFloat(document.getElementById('locLat').value);
+            const lng = parseFloat(document.getElementById('locLng').value);
+
+            if (!name) { toast('warning', 'Please enter a location name'); return; }
+            if (isNaN(lat) || isNaN(lng)) { toast('warning', 'Please set valid coordinates'); return; }
+
+            const loc = getFormData(name, lat, lng);
+            locations[editingId] = loc;
+
+            // Update marker
+            if (adminMarkers[editingId]) {
+                adminMarkers[editingId].setMap(null);
+            }
+            adminMarkers[editingId] = createLocationMarker(editingId, loc);
+
+            saveLocations();
+            renderList();
+            clearForm();
+            toast('success', `"${name}" updated`);
+        }
+
+        function deleteLocation(id) {
+            if (!confirm(`Delete "${locations[id]?.name}"?`)) return;
+
+            if (adminMarkers[id]) {
+                adminMarkers[id].setMap(null);
+                delete adminMarkers[id];
+            }
+            delete locations[id];
+
+            saveLocations();
+            renderList();
+            if (editingId === id) clearForm();
+            toast('info', 'Location deleted');
+        }
+
+        function editLocation(id) {
+            const loc = locations[id];
+            if (!loc) return;
+
+            editingId = id;
+            document.getElementById('locName').value = loc.name;
+            document.getElementById('locLat').value = loc.lat;
+            document.getElementById('locLng').value = loc.lng;
+            document.getElementById('locCode').value = loc.code || '';
+            document.getElementById('locType').value = loc.type || 'building';
+            document.getElementById('locAddress').value = loc.address || '';
+            document.getElementById('locStatus').value = loc.status || 'open';
+            document.getElementById('locHours').value = loc.hours || '';
+            document.getElementById('locDescription').value = loc.description || '';
+
+            setCoordinates(loc.lat, loc.lng);
+            if (adminMap) placeClickMarker(loc.lat, loc.lng);
+
+            document.getElementById('addBtn').style.display = 'none';
+            document.getElementById('updateBtn').style.display = 'flex';
+
+            // Highlight in list
+            document.querySelectorAll('.list-item').forEach(el => el.classList.remove('active'));
+            const el = document.getElementById('item-' + id);
+            if (el) {
+                el.classList.add('active');
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+        }
+
+        function clearForm() {
+            editingId = null;
+            document.getElementById('locName').value = '';
+            document.getElementById('locLat').value = '';
+            document.getElementById('locLng').value = '';
+            document.getElementById('locCode').value = '';
+            document.getElementById('locType').value = 'building';
+            document.getElementById('locAddress').value = '';
+            document.getElementById('locStatus').value = 'open';
+            document.getElementById('locHours').value = '';
+            document.getElementById('locDescription').value = '';
+            document.getElementById('dispLat').textContent = '--';
+            document.getElementById('dispLng').textContent = '--';
+
+            document.getElementById('addBtn').style.display = 'flex';
+            document.getElementById('updateBtn').style.display = 'none';
+
+            if (clickMarker) {
+                clickMarker.setMap(null);
+                clickMarker = null;
+            }
+
+            document.querySelectorAll('.list-item').forEach(el => el.classList.remove('active'));
+        }
+
+        function getFormData(name, lat, lng) {
+            return {
+                name,
+                lat,
+                lng,
+                code: document.getElementById('locCode').value.trim().toUpperCase(),
+                type: document.getElementById('locType').value,
+                address: document.getElementById('locAddress').value.trim(),
+                status: document.getElementById('locStatus').value,
+                hours: document.getElementById('locHours').value.trim(),
+                description: document.getElementById('locDescription').value.trim()
+            };
+        }
+
+        // ========== LIST RENDERING ==========
+        function renderList() {
+            const container = document.getElementById('locationList');
+            const entries = Object.entries(locations);
+            document.getElementById('listCount').textContent = `${entries.length} location${entries.length !== 1 ? 's' : ''}`;
+
+            let html = `<div class="list-header">
+                <span style="font-size:14px;font-weight:600;">Locations</span>
+                <span class="list-count">${entries.length} location${entries.length !== 1 ? 's' : ''}</span>
+            </div>`;
+
+            if (entries.length === 0) {
+                html += '<div style="text-align:center;color:var(--text-muted);padding:40px 20px;font-size:13px;">No locations added yet. Click the map to get started.</div>';
+            }
+
+            entries.forEach(([id, loc]) => {
+                const tc = typeConfig[loc.type] || typeConfig.building;
+                html += `<div class="list-item ${editingId === id ? 'active' : ''}" id="item-${id}" onclick="editLocation('${id}')">
+                    <div class="list-item-icon" style="background:${tc.color}20;">${tc.icon}</div>
+                    <div class="list-item-info">
+                        <div class="list-item-name">${loc.name}</div>
+                        <div class="list-item-detail">${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}</div>
+                    </div>
+                    <span class="list-item-type">${loc.type}</span>
+                    <div class="list-item-actions">
+                        <button class="list-item-btn" onclick="event.stopPropagation();panToLocation('${id}')" title="Go to">📍</button>
+                        <button class="list-item-btn delete" onclick="event.stopPropagation();deleteLocation('${id}')" title="Delete">✕</button>
+                    </div>
+                </div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function panToLocation(id) {
+            const loc = locations[id];
+            if (loc && adminMap) {
+                adminMap.panTo({ lat: loc.lat, lng: loc.lng });
+                adminMap.setZoom(18);
+            }
+        }
+
+        // ========== PERSISTENCE ==========
+        function saveLocations() {
+            localStorage.setItem('adminLocations', JSON.stringify(locations));
+            localStorage.setItem('adminIdCounter', idCounter);
+        }
+
+        function loadSavedLocations() {
+            const saved = localStorage.getItem('adminLocations');
+            const savedCounter = localStorage.getItem('adminIdCounter');
+            if (saved) {
+                locations = JSON.parse(saved);
+                idCounter = parseInt(savedCounter) || Object.keys(locations).length + 1;
+                // Recreate markers
+                Object.entries(locations).forEach(([id, loc]) => {
+                    adminMarkers[id] = createLocationMarker(id, loc);
+                });
+            }
+            renderList();
+        }
+
+        // ========== EXPORT ==========
+        function exportAsJS() {
+            const entries = Object.entries(locations);
+            if (entries.length === 0) { toast('warning', 'No locations to export'); return; }
+
+            let js = '// Paste this into campusLocations in app.js\n';
+            entries.forEach(([id, loc]) => {
+                const tc = typeConfig[loc.type] || typeConfig.building;
+                const key = loc.code ? loc.code.toLowerCase().replace(/[^a-z0-9]/g, '') : loc.name.toLowerCase().replace(/[^a-z0-9]/g, '').substring(0, 12);
+                js += `    ${key}: { name: '${loc.name.replace(/'/g, "\\'")}', code: '${loc.code}', position: { lat: ${loc.lat}, lng: ${loc.lng} }, type: '${loc.type}', icon: '${tc.icon}', color: '${tc.color}', status: '${loc.status}'`;
+                if (loc.hours) js += `, hours: '${loc.hours}'`;
+                if (loc.address) js += `, address: '${loc.address.replace(/'/g, "\\'")}'`;
+                js += ` },\n`;
+            });
+
+            downloadText(js, 'campus-locations.js', 'text/javascript');
+            toast('success', `Exported ${entries.length} locations as JS`);
+        }
+
+        function exportAsJSON() {
+            const entries = Object.entries(locations);
+            if (entries.length === 0) { toast('warning', 'No locations to export'); return; }
+
+            const data = entries.map(([id, loc]) => ({
+                name: loc.name,
+                code: loc.code,
+                lat: loc.lat,
+                lng: loc.lng,
+                type: loc.type,
+                status: loc.status,
+                hours: loc.hours || null,
+                address: loc.address || null,
+                description: loc.description || null
+            }));
+
+            downloadText(JSON.stringify(data, null, 2), 'campus-locations.json', 'application/json');
+            toast('success', `Exported ${entries.length} locations as JSON`);
+        }
+
+        function exportAsCSV() {
+            const entries = Object.entries(locations);
+            if (entries.length === 0) { toast('warning', 'No locations to export'); return; }
+
+            let csv = 'Name,Code,Latitude,Longitude,Type,Status,Hours,Address,Description\n';
+            entries.forEach(([id, loc]) => {
+                csv += `"${loc.name}","${loc.code}",${loc.lat},${loc.lng},"${loc.type}","${loc.status}","${loc.hours || ''}","${loc.address || ''}","${(loc.description || '').replace(/"/g, '""')}"\n`;
+            });
+
+            downloadText(csv, 'campus-locations.csv', 'text/csv');
+            toast('success', `Exported ${entries.length} locations as CSV`);
+        }
+
+        function downloadText(content, filename, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // ========== IMPORT ==========
+        function importFromJSON() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    let count = 0;
+
+                    if (Array.isArray(data)) {
+                        data.forEach(item => {
+                            if (item.name && (item.lat !== undefined || item.latitude !== undefined)) {
+                                const id = 'loc_' + idCounter++;
+                                locations[id] = {
+                                    name: item.name,
+                                    lat: item.lat || item.latitude,
+                                    lng: item.lng || item.longitude || item.lon,
+                                    code: item.code || '',
+                                    type: item.type || 'building',
+                                    address: item.address || '',
+                                    status: item.status || 'open',
+                                    hours: item.hours || '',
+                                    description: item.description || ''
+                                };
+                                if (adminMap) {
+                                    adminMarkers[id] = createLocationMarker(id, locations[id]);
+                                }
+                                count++;
+                            }
+                        });
+                    }
+
+                    saveLocations();
+                    renderList();
+                    toast('success', `Imported ${count} locations`);
+                } catch (err) {
+                    toast('warning', 'Invalid JSON file: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ========== TOAST ==========
+        function toast(type, message) {
+            const container = document.getElementById('toastContainer');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `
+                <span class="toast-text">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+            `;
+            container.appendChild(el);
+            setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 300); }, 3000);
+        }
+
+        // ========== KEYBOARD SHORTCUTS ==========
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') clearForm();
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                if (editingId) updateLocation();
+                else addLocation();
+            }
+        });
+
+        // ========== LOAD MAP ==========
+        function loadMap() {
+            if (!GOOGLE_MAPS_API_KEY || !GOOGLE_MAPS_API_KEY.startsWith('AIza')) {
+                document.getElementById('adminMap').innerHTML = `
+                    <div class="api-notice">
+                        <h2>Google Maps API Key Required</h2>
+                        <p>Add your API key to the .env file, then run <code>python3 server.py</code></p>
+                        <p style="font-size:12px;margin-top:8px;">You can still add locations manually using the form on the left.</p>
+                    </div>
+                `;
+                renderList();
+                return;
+            }
+
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&callback=initAdminMap`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        }
+
+        window.addEventListener('load', loadMap);
+    </script>
+</body>
+</html>
