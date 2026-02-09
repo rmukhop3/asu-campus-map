@@ -60,6 +60,121 @@
             pointer-events: none;
         }
 
+        /* ========== CLOSING CEREMONY (Mischief Managed) ========== */
+        .closing-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--parchment);
+            z-index: 9998;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1.5s ease;
+        }
+
+        .closing-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .closing-text {
+            font-family: 'Cinzel Decorative', 'Cinzel', serif;
+            text-align: center;
+            line-height: 2;
+            max-width: 500px;
+        }
+
+        .closing-text .line {
+            display: block;
+            opacity: 0;
+            color: var(--ink);
+        }
+
+        .closing-overlay.active .closing-text .line:nth-child(1) { animation: inkFadeIn 1.5s ease 0.5s forwards; }
+        .closing-overlay.active .closing-text .line:nth-child(2) { animation: inkFadeIn 1.5s ease 1.2s forwards; }
+        .closing-overlay.active .closing-text .line:nth-child(3) { animation: inkFadeIn 2s ease 2.2s forwards; }
+        .closing-overlay.active .closing-text .line:nth-child(4) { animation: inkFadeIn 1.5s ease 3.5s forwards; }
+
+        @keyframes inkFadeIn {
+            0% { opacity: 0; transform: scale(0.97); }
+            40% { opacity: 0.4; }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* After closing, everything fades out */
+        .closing-overlay.active .closing-text .line.fade-away {
+            animation: inkDissolve 2s ease forwards !important;
+        }
+
+        @keyframes inkDissolve {
+            0% { opacity: 1; }
+            60% { opacity: 0.3; color: var(--ink-ghost); }
+            100% { opacity: 0; color: transparent; }
+        }
+
+        .closing-footer {
+            position: absolute;
+            bottom: 40px;
+            font-family: 'IM Fell English', serif;
+            font-style: italic;
+            font-size: 14px;
+            color: var(--ink-ghost);
+            opacity: 0;
+        }
+
+        .closing-overlay.active .closing-footer {
+            animation: fadeIn 1s ease 4.5s forwards;
+        }
+
+        /* Map deactivated state */
+        .map-deactivated .sidebar,
+        .map-deactivated .map-overlay,
+        .map-deactivated #map {
+            transition: opacity 1s ease;
+        }
+
+        .map-deactivated.fading .sidebar,
+        .map-deactivated.fading .map-overlay,
+        .map-deactivated.fading #map {
+            opacity: 0;
+        }
+
+        /* Mischief Managed button */
+        .mischief-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: transparent;
+            border: 1px dashed var(--ink-ghost);
+            border-radius: 4px;
+            font-family: 'IM Fell English', serif;
+            font-size: 12px;
+            font-style: italic;
+            color: var(--ink-faded);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mischief-btn:hover {
+            border-color: var(--maroon);
+            color: var(--maroon);
+            background: rgba(107, 22, 49, 0.05);
+        }
+
+        .mischief-btn .wand {
+            display: inline-block;
+            transition: transform 0.3s;
+        }
+
+        .mischief-btn:hover .wand {
+            transform: rotate(-15deg);
+        }
+
         .ceremony-text {
             font-family: 'Cinzel Decorative', 'Cinzel', serif;
             font-size: 18px;
@@ -1451,6 +1566,22 @@
         <div class="ceremony-footer">tap anywhere to reveal the map...</div>
     </div>
 
+    <!-- CLOSING CEREMONY -->
+    <div class="closing-overlay" id="closingOverlay">
+        <div class="closing-text" id="closingText">
+            <span class="line" style="font-size:14px;letter-spacing:2px;">THE MARAUDER'S MAP</span>
+            <span class="line" style="font-size:26px;margin:16px 0;">Mischief Managed.</span>
+            <div class="flourish" style="opacity:0;">
+                <svg viewBox="0 0 200 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 15 Q25 0 50 15 Q75 30 100 15 Q125 0 150 15 Q175 30 200 15" stroke="#2c1810" stroke-width="1" fill="none" opacity="0.4"/>
+                    <circle cx="100" cy="15" r="3" fill="#6b1631"/>
+                </svg>
+            </div>
+            <span class="line" style="font-size:13px;font-style:italic;color:var(--ink-faded);">The map returns to blank parchment...</span>
+        </div>
+        <div class="closing-footer">tap to reawaken the map...</div>
+    </div>
+
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Header -->
@@ -1476,6 +1607,9 @@
             </div>
             <button class="header-btn" onclick="openCreateMeetup()">Create Gathering</button>
             <button class="header-btn primary" onclick="openStudyBuddy()">Find Allies</button>
+            <button class="mischief-btn" id="mischiefBtn" onclick="mischiefManaged()" title="Mischief Managed">
+                <span class="wand">⚡</span> Mischief Managed
+            </button>
             <button class="mobile-menu-btn" id="mobileMenuBtn" title="Toggle sidebar">☰</button>
             <div class="user-avatar">RD</div>
         </div>
@@ -1675,24 +1809,32 @@
     <script src="app.js"></script>
 
     <script>
-        // Opening ceremony
-        const overlay = document.getElementById('ceremonyOverlay');
-        const text = document.getElementById('ceremonyText');
+        // ========== OPENING CEREMONY ==========
+        const openOverlay = document.getElementById('ceremonyOverlay');
+        const openText = document.getElementById('ceremonyText');
 
-        setTimeout(() => text.classList.add('reveal'), 300);
+        setTimeout(() => openText.classList.add('reveal'), 300);
 
-        overlay.addEventListener('click', () => {
-            overlay.classList.add('hidden');
-            setTimeout(() => overlay.style.display = 'none', 1500);
+        openOverlay.addEventListener('click', () => {
+            openOverlay.classList.add('hidden');
+            setTimeout(() => openOverlay.style.display = 'none', 1500);
         });
 
         // Auto-dismiss after 6 seconds
         setTimeout(() => {
-            if (!overlay.classList.contains('hidden')) {
-                overlay.classList.add('hidden');
-                setTimeout(() => overlay.style.display = 'none', 1500);
+            if (!openOverlay.classList.contains('hidden')) {
+                openOverlay.classList.add('hidden');
+                setTimeout(() => openOverlay.style.display = 'none', 1500);
             }
         }, 6000);
+
+        // ========== CLOSING CEREMONY (Mischief Managed) ==========
+        const closeOverlay = document.getElementById('closingOverlay');
+
+        // Click closing overlay to reawaken
+        closeOverlay.addEventListener('click', () => {
+            solemnlySwear();
+        });
     </script>
 </body>
 </html>

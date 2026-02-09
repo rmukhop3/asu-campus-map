@@ -78,6 +78,8 @@ let currentTab = 'explore';
 let activityTab = 'all';
 let trafficOn = false;
 let heatmapOn = false;
+let mapActive = true;
+let footstepInterval = null;
 
 // ========== MARKER ICON LABELS (single char for clean markers) ==========
 const typeIcons = {
@@ -305,7 +307,7 @@ function initFootsteps() {
     });
 
     // Animate footsteps
-    setInterval(animateFootsteps, 100);
+    footstepInterval = setInterval(animateFootsteps, 100);
 }
 
 function interpolatePath(path, t) {
@@ -1031,6 +1033,149 @@ function showToast(type, title, message) {
     `;
     container.appendChild(toast);
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 3000);
+}
+
+// ========== MISCHIEF MANAGED / SOLEMNLY SWEAR ==========
+function mischiefManaged() {
+    if (!mapActive) return;
+    mapActive = false;
+
+    // Stop footstep animation
+    if (footstepInterval) {
+        clearInterval(footstepInterval);
+        footstepInterval = null;
+    }
+
+    // Close any open panels/modals
+    infoWindow?.close();
+    closeDirections();
+    closeDetailModal();
+    closeCreateMeetup();
+    closeStudyBuddy();
+
+    // Fade out the main container content
+    const mainContainer = document.querySelector('.main-container');
+    mainContainer.classList.add('map-deactivated', 'fading');
+
+    // Hide all footstep overlays
+    footstepOverlays.forEach(overlay => {
+        if (overlay.div) overlay.div.style.opacity = '0';
+    });
+
+    // Hide all markers with a staggered fade
+    const markerIds = Object.keys(markers);
+    markerIds.forEach((id, i) => {
+        setTimeout(() => {
+            if (markers[id]) markers[id].setVisible(false);
+        }, i * 30);
+    });
+
+    // After content fades, show the closing overlay
+    setTimeout(() => {
+        const closeOverlay = document.getElementById('closingOverlay');
+        closeOverlay.classList.add('active');
+
+        // Animate the flourish
+        const flourish = closeOverlay.querySelector('.flourish');
+        if (flourish) {
+            setTimeout(() => { flourish.style.opacity = '1'; flourish.style.transition = 'opacity 1s ease'; }, 2000);
+        }
+    }, 800);
+
+    // Update the button to show "I solemnly swear..."
+    const btn = document.getElementById('mischiefBtn');
+    if (btn) {
+        btn.innerHTML = '<span class="wand">⚡</span> I solemnly swear...';
+        btn.setAttribute('onclick', 'solemnlySwear()');
+        btn.title = 'I solemnly swear that I am up to no good';
+    }
+}
+
+function solemnlySwear() {
+    if (mapActive) return;
+
+    // Hide closing overlay
+    const closeOverlay = document.getElementById('closingOverlay');
+    closeOverlay.classList.remove('active');
+
+    // Reset closing text animations for next time
+    const closingLines = closeOverlay.querySelectorAll('.closing-text .line');
+    closingLines.forEach(line => line.classList.remove('fade-away'));
+    const flourish = closeOverlay.querySelector('.flourish');
+    if (flourish) { flourish.style.opacity = '0'; flourish.style.transition = ''; }
+
+    // Show the opening ceremony again
+    const openOverlay = document.getElementById('ceremonyOverlay');
+    openOverlay.style.display = 'flex';
+    openOverlay.classList.remove('hidden');
+
+    // Reset and re-trigger the opening text animation
+    const openText = document.getElementById('ceremonyText');
+    openText.classList.remove('reveal');
+    void openText.offsetWidth; // Force reflow
+    setTimeout(() => openText.classList.add('reveal'), 100);
+
+    // Auto-dismiss opening ceremony after 5 seconds
+    const openingTimeout = setTimeout(() => {
+        if (!openOverlay.classList.contains('hidden')) {
+            openOverlay.classList.add('hidden');
+            setTimeout(() => openOverlay.style.display = 'none', 1500);
+        }
+    }, 5000);
+
+    // Allow click to dismiss
+    const clickHandler = () => {
+        clearTimeout(openingTimeout);
+        openOverlay.classList.add('hidden');
+        setTimeout(() => openOverlay.style.display = 'none', 1500);
+        openOverlay.removeEventListener('click', clickHandler);
+    };
+    openOverlay.addEventListener('click', clickHandler);
+
+    // Restore the map after a brief delay
+    setTimeout(() => {
+        mapActive = true;
+
+        // Unfade the main container
+        const mainContainer = document.querySelector('.main-container');
+        mainContainer.classList.remove('fading');
+        setTimeout(() => mainContainer.classList.remove('map-deactivated'), 1000);
+
+        // Show all markers with staggered animation
+        const markerIds = Object.keys(markers);
+        markerIds.forEach((id, i) => {
+            setTimeout(() => {
+                if (markers[id] && visibleCategories.has(campusLocations[id]?.type)) {
+                    markers[id].setVisible(true);
+                }
+            }, i * 50);
+        });
+
+        // Restore footstep overlays
+        footstepOverlays.forEach(overlay => {
+            if (overlay.div) overlay.div.style.opacity = '1';
+        });
+
+        // Restart footstep animation
+        if (!footstepInterval) {
+            footstepInterval = setInterval(animateFootsteps, 100);
+        }
+
+        // Restore sidebar & stats
+        updateStats();
+        renderSidebar();
+        renderActivityFeed();
+
+        showToast('success', 'Map Revealed', 'The Marauder\'s Map is once again active');
+    }, 1500);
+
+    // Update button back to "Mischief Managed"
+    const btn = document.getElementById('mischiefBtn');
+    if (btn) {
+        btn.innerHTML = '<span class="wand">⚡</span> Mischief Managed';
+        btn.setAttribute('onclick', 'mischiefManaged()');
+        btn.title = 'Mischief Managed';
+    }
 }
 
 // ========== LOAD GOOGLE MAPS ==========
